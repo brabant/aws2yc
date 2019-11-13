@@ -40,7 +40,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Копирование файлов'
     )
-    parser.add_argument('skip', help='Пропустить первые n файлов', type=int, default=0)
+    parser.add_argument('-s', '--skip', help='Пропустить первые n файлов', type=int, default=0)
     args = parser.parse_args()
     skip = args.skip
 
