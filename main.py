@@ -15,7 +15,7 @@ def format_bytes(bytes_num):
         j = j + 1
         bytes_num = bytes_num / 1024
 
-    return str(round(dblbyte, 2)) + " " + sizes[i]
+    return str(round(dblbyte, 2)) + " " + sizes[j]
 
 
 def createBucket(credentials, configs):
@@ -30,7 +30,7 @@ def createBucket(credentials, configs):
         if param != 'bucket':
             params[param] = val
 
-    resource = session.resource('s3')
+    resource = session.resource('s3', **params)
 
     return resource.Bucket(configs['bucket'])
 
@@ -46,6 +46,8 @@ if __name__ == '__main__':
     i = 0
     total_size = 0
     for obj in bucketFrom.objects.all():
+        if i>10:
+            exit()
         key = obj.key
         objectFrom = bucketFrom.Object(key)
 
