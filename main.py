@@ -2,6 +2,7 @@ import boto3
 from botocore.configloader import load_config
 import io
 from sys import stdout
+import argparse
 
 
 def format_bytes(bytes_num):
@@ -35,7 +36,13 @@ def createBucket(credentials, configs):
     return resource.Bucket(configs['bucket'])
 
 
-if __name__ == '__main__':
+def main():
+    parser = argparse.ArgumentParser(
+        description='Копирование файлов'
+    )
+    parser.add_argument('skip', help='Пропустить первые n файлов', type=int, default=0)
+    args = parser.parse_args()
+    skip = args.skip
 
     credentials = load_config("./.aws/credentials")
     configs = load_config("./.aws/configs")
@@ -43,11 +50,19 @@ if __name__ == '__main__':
     bucketFrom = createBucket(credentials['profiles']['from'], configs['profiles']['from'])
     bucketTo = createBucket(credentials['profiles']['to'], configs['profiles']['to'])
 
+    if skip:
+        print("Skipping %d" % skip)
+
     i = 0
     total_size = 0
     for obj in bucketFrom.objects.all():
-        if i>10:
-            exit()
+        stdout.write("\rTotal files: %d, total size: %s" % (i, format_bytes(total_size)))
+        stdout.flush()
+
+        if i < skip:
+            i += 1
+            continue
+
         key = obj.key
         objectFrom = bucketFrom.Object(key)
 
@@ -62,6 +77,8 @@ if __name__ == '__main__':
             objectTo = bucketTo.Object(key)
             objectTo.upload_fileobj(file_stream)
 
-        stdout.write("\rTotal files: %d, total size: %s" % (i, format_bytes(total_size)))
-        stdout.flush()
         i += 1
+
+
+if __name__ == '__main__':
+    main()
