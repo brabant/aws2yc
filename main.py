@@ -157,7 +157,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--skip', help='Пропустить первые s файлов', type=int, default=0)
     parser.add_argument('-m', '--max', help='Остановиться при достижении m файлов', type=int, default=0)
     parser.add_argument('-t', '--threads', help='Количество потоков', type=int, default=1)
-    parser.add_argument('-n', '--onlynew', help='Только новые', type=int, default=0)
+    parser.add_argument('-n', '--onlynew', help='Только новые', type=int, default=1)
     args = parser.parse_args()
     skip = args.skip
     max = args.max
