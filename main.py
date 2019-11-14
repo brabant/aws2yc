@@ -52,7 +52,7 @@ def main_async(skip, max, only_new, threads_count):
     i = 0
     total_size = 0
 
-    print("Start at %d threads")
+    print("Start at %d threads" % threads_count)
 
     for obj in bucket_from.objects.all():
         if i < skip:
